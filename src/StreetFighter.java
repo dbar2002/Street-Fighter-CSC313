@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Timer;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
@@ -100,8 +101,6 @@ public class StreetFighter {
         appFrame = new JFrame("Street Fighter");
         xOffset = 0;
         yOffset = 0;
-        //winWidth = 500;
-        //winHeight = 500;
         pi = Math.PI;
         twoPi = 2 * pi;
         piOvertwo = pi / 2;
@@ -129,7 +128,7 @@ public class StreetFighter {
         try {
 
             //default images for the game
-            gameCover = ImageIO.read(new File("src/images/SF2bg1.jpg"));
+            gameCover = ImageIO.read(new File("src/images/street fighter logo.png"));
             background = ImageIO.read(new File("src/images/SF2bg1.jpg"));
             player = ImageIO.read(new File("src/images/KENcharactersheet.gif"));
             player2 = ImageIO.read(new File("src/images/RYUcharactersheet.gif"));
@@ -147,7 +146,7 @@ public class StreetFighter {
     public static void main(String[] args) {
         setup();
         appFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        appFrame.setSize(600, 592);
+        appFrame.setSize(1000, 600);
         appFrame.setResizable(false);
 
         menuPanel = new JPanel();
@@ -158,16 +157,8 @@ public class StreetFighter {
         newGameButton.addActionListener(new StartGame());
         menuPanel.add(newGameButton);
 
-        //select laps drop down menu
-        Integer[] laps = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        JLabel lapText = new JLabel("Select Laps");
-        lapList = new JComboBox(laps);
-        menuPanel.add(lapText);
-        menuPanel.add(lapList);
-        lapList.addActionListener(new LapListener());
-
         //select vehicle player 1 drop down
-        String[] vehicles = new String[]{"Supra", "Porshe", "BMW", "Toyota"};
+        String[] vehicles = new String[]{"Ryu", "Ken"};
         JLabel vehicleText1 = new JLabel("Player 1");
         vehicleList = new JComboBox(vehicles);
         menuPanel.add(vehicleText1);
@@ -203,16 +194,16 @@ public class StreetFighter {
     }
 
     public static void Cover(JPanel container) {
-        image = new ImageIcon("src/images/coverlogo.png").getImage();
+        image = new ImageIcon("src/images/street fighter logo.png").getImage();
 
         container = new MyBackground();
         appFrame.add(container);
         appFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        appFrame.setSize(590, 565);
+        appFrame.setSize(1200, 600);
         appFrame.setVisible(true);
         try {
             //play music
-            ais = AudioSystem.getAudioInputStream(new File("src/sounds/yt5s.io_-_NFS_CARBON_BELT_TUNER_THEMEPHONK_REMIX_320_kbps.mp3"));
+            ais = AudioSystem.getAudioInputStream(new File(""));
             wav1 = AudioSystem.getClip();
             wav1.open(ais);
             wav1.loop(0);
@@ -247,7 +238,7 @@ public class StreetFighter {
             while (!endgame) {
                 drawBackground();
                 drawPlayer();
-                drawClock();
+                drawCountdown(long durationSeconds);
                 drawSpeed();
                 drawPlayer();
 
@@ -326,9 +317,6 @@ public class StreetFighter {
 
     private static class StartGame implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-//            appFrame.remove(titleScreen);
-//            appFrame.remove(menuPanel);
-
             endgame = true;
             start = System.currentTimeMillis();
             upPressed = false;
@@ -562,12 +550,12 @@ public class StreetFighter {
         myPanel.getInputMap(IFW).put(KeyStroke.getKeyStroke("released " + input), input + " released");
         myPanel.getActionMap().put(input + " released", new KeyReleased(input));
     }
-    private static void drawClock() {
+    private static void drawCountdown(long durationSeconds) {
         Graphics g = appFrame.getGraphics();
         Graphics2D g2d = (Graphics2D) g;
-        DecimalFormat df = new DecimalFormat("##.##");
-        long end = System.currentTimeMillis();
-        float sec = (end - start) / 1000f;
+        DecimalFormat df = new DecimalFormat("##");
+        long remaining = start + (durationSeconds * 1000) - System.currentTimeMillis();
+        float sec = remaining / 1000f;
         Stroke oldStroke = g2d.getStroke();
 
         g2d.setColor(Color.ORANGE);
@@ -580,7 +568,15 @@ public class StreetFighter {
         g2d.drawString(df.format(sec) + " seconds", appFrame.getWidth() - 130, 45);
         g2d.drawString("Player 1 Laps: " + p1CurrentLap + "/" + maxLaps, appFrame.getWidth() - 130, 65);
         g2d.drawString("Player 2 Laps: " + p2CurrentLap + "/" + maxLaps, appFrame.getWidth() - 130, 80);
+
+        if (remaining <= 0) {
+            // Timer has expired
+            // Do something here, like end the game or show a message
+            return;
+        }
     }
+
+
 
     private static void drawSpeed() {
 
