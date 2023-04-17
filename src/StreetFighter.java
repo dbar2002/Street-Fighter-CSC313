@@ -56,11 +56,13 @@ public class StreetFighter {
     private static double p1OriginalX;
     private static double p1OriginalY;
     private static double p1Velocity;
+    private static double p1Yvelocity;
     private static double p2Width;
     private static double p2Height;
     private static double p2OriginalX;
     private static double p2OriginalY;
     private static double p2Velocity;
+    private static double p2Yvelocity;
     private static double maxSpeed;
     private static int xOffset;
     private static int yOffset;
@@ -94,6 +96,8 @@ public class StreetFighter {
     private static AudioInputStream ais2;
     private static Clip wav2;
     private static Image image;
+    private static Vector<String> moveSet;
+    private static Vector<Integer> moveSteps;
 
     public StreetFighter() {
         setup();
@@ -127,6 +131,19 @@ public class StreetFighter {
         System.out.println("P1 x: " + p1OriginalX + ", P1 y: " + p1OriginalY);
         System.out.println("P2 x: " + p2OriginalX + ", P2 y: " + p2OriginalY);
 
+        moveSet = new Vector<>();
+        moveSteps = new Vector<>();
+        moveSet.add("Idle");
+        moveSteps.add(4);
+        moveSet.add("Walk");
+        moveSteps.add(5);
+        moveSet.add("Jump");
+        moveSteps.add(7);
+        moveSet.add("Crouch");
+        moveSteps.add(3);
+
+
+
         try {
 
             //default images for the game
@@ -136,12 +153,32 @@ public class StreetFighter {
             player.add(ImageIO.read(new File("src/images/idleTwo.png")));
             player.add(ImageIO.read(new File("src/images/idleThree.png")));
             player.add(ImageIO.read(new File("src/images/idleFour.png")));
+            player.add(ImageIO.read(new File("src/images/walkOne.png")));
+            player.add(ImageIO.read(new File("src/images/walkTwo.png")));
+            player.add(ImageIO.read(new File("src/images/walkThree.png")));
+            player.add(ImageIO.read(new File("src/images/walkFour.png")));
+            player.add(ImageIO.read(new File("src/images/walkFive.png")));
+            player.add(ImageIO.read(new File("src/images/jumpOne.png")));
+            player.add(ImageIO.read(new File("src/images/jumpTwo.png")));
+            player.add(ImageIO.read(new File("src/images/jumpThree.png")));
+            player.add(ImageIO.read(new File("src/images/jumpFour.png")));
+            player.add(ImageIO.read(new File("src/images/jumpFive.png")));
+            player.add(ImageIO.read(new File("src/images/jumpSix.png")));
+            player.add(ImageIO.read(new File("src/images/jumpSeven.png")));
+            player.add(ImageIO.read(new File("src/images/crouch.png")));
+            player.add(ImageIO.read(new File("src/images/crouch.png")));
+            player.add(ImageIO.read(new File("src/images/crouch.png")));
+
+
             player2 = ImageIO.read(new File("src/images/RYUcharactersheet.gif"));
 
 
         } catch (IOException ioe) {
 
         }
+
+        System.out.println(player.size());
+
     }
 
     /**
@@ -244,16 +281,12 @@ public class StreetFighter {
                 drawBackground();
                 drawPlayer();
                 //drawCountdown(long durationSeconds);
-                //drawPlayer();
-
 
                 if (p1CurrentLap >= maxLaps + 1) {
                     drawWinner("Player 1");
                     drawWinner("Player 1");
                     g2d.setFont(new Font("TimesRoman", Font.BOLD, 40));
                     g2d.setColor(Color.GREEN);
-                    g2d.drawString("Player 1 Best Lap: " + bestTimePlayer1 / 1000f + " seconds", 450, 550);
-                    g2d.drawString("Player 2 Best Lap: " + bestTimePlayer2 / 1000f + " seconds", 450, 650);
                     endgame = true;
                     wav1.close();
                     wav2.close();
@@ -261,18 +294,18 @@ public class StreetFighter {
                     drawWinner("Player 2");
                     g2d.setFont(new Font("TimesRoman", Font.BOLD, 40));
                     g2d.setColor(Color.red);
-                    g2d.drawString("Player 1 Best Lap: " + bestTimePlayer1 / 1000f + " seconds", 450, 550);
-                    g2d.drawString("Player 2 Best Lap: " + bestTimePlayer2 / 1000f + " seconds", 450, 650);
                     endgame = true;
                     wav1.close();
                     wav2.close();
                 }
+                drawPlayer();
 
                 try {
-                    Thread.sleep(50);
+                    Thread.sleep(40);
                 } catch (InterruptedException e) {
                     System.out.println("Exception caught in Animate");
                 }
+
             }
         }
     }
@@ -341,6 +374,8 @@ public class StreetFighter {
 
             p1Velocity = 0.0;
             p2Velocity = 0.0;
+            p1Yvelocity = 0.0;
+            p2Yvelocity = 0.0;
 
             try {
                 Thread.sleep(50);
@@ -406,15 +441,21 @@ public class StreetFighter {
 
     private static class PlayerMover implements Runnable {
 
-        private double velocityStep;
-        private boolean jumping = false;
-        private boolean attacking = false;
-        private boolean crouching = false;
+        private boolean animationFinished;
+        private boolean newAnimation = true;
+        private String currentAnimation = "Idle";
         private static int animState = 0;
+        private static int currentMoveEnd = 0;
+        private boolean jumping = false;
+        private boolean crouching = false;
+        private double crouchHeight;
+        private double standingHeight;
 
         //level of acceleration and rotation speed
         public PlayerMover() {
-            velocityStep = 0.01;
+            animationFinished = true;
+            standingHeight = p1.getY();
+            crouchHeight = p1.getY() + 60;
         }
 
         public static int getAnimState() {
@@ -424,92 +465,94 @@ public class StreetFighter {
         public void run() {
 
             while (!endgame) {
-                if(aPressed || sPressed || dPressed || ePressed || fPressed || wPressed) {
-                    //Player One
-                    if (sPressed) {
-                        crouching = true;
-                    }
+                if(newAnimation) {
+                    int tempAnimState = 0;
+                    p1Yvelocity = 0;
 
-                    if (dPressed) {
-                        if (!crouching && p1Velocity < maxSpeed) {
-                            p1Velocity += velocityStep;
-                        } else if (crouching && p1Velocity < maxSpeed / 2.0) {
-                            p1Velocity += velocityStep;
-                        }
-                    } else if (aPressed) {
-                        if (p1Velocity > maxSpeed) {
-                            p1Velocity -= velocityStep;
-                        }
-                    }
-
-
-                    //Determine animState
-                    if (crouching) {
-                        if (attacking) {
-
+                    findMove:
+                    for(int i = 0; i < moveSet.size(); i++) {
+                        if(moveSet.get(i).equalsIgnoreCase(currentAnimation)) {
+                            animState = tempAnimState;
+                            currentMoveEnd = tempAnimState + moveSteps.get(i) - 1;
+                            newAnimation = false;
+                            animationFinished = false;
+                            break findMove;
+                        } else {
+                            tempAnimState += moveSteps.get(i);
                         }
                     }
                 } else {
-                    if(animState >= 3) {
+                    if (currentMoveEnd - animState > 0) {
+                        try {
+                            Thread.sleep(150);
+                        } catch (InterruptedException e) {
+                            System.out.println("Exception caught for PlayerMover");
+                        }
+                        animState++;
+
+                        if(jumping) {
+                            p1Yvelocity -= (((currentMoveEnd - animState) * 7) - 10);
+                        }
+
+                    } else {
+                        currentAnimation = "Idle";
                         animState = 0;
-                    } else if(animState == 0)
-                        animState = 1;
-                    else if(animState == 1)
-                        animState = 2;
-                    else if(animState == 2)
-                        animState = 3;
+                        currentMoveEnd = 0;
+                        animationFinished = true;
+                        newAnimation = true;
+                        jumping = false;
+                        crouching = false;
+                    }
                 }
 
-//                if(upPressed && p1Velocity < maxSpeed) {
-//                    p1Velocity += velocityStep;
-//                }
-//                else if((downPressed) && p1Velocity > -maxSpeed) {
-//                    p1Velocity -= velocityStep * 3;
-//                }else {
-//                    if(p1Velocity != 0) {
-//                        if(p1Velocity > 0) {
-//                            p1Velocity -=velocityStep * 2;
-//                        } else {
-//                            p1Velocity +=velocityStep;
-//                        }
-//                    }
-//                }
-//                if(rightPressed) {
-//
-//                }
-//                else if(leftPressed) {
-//
-//                }
 
-//                //Player2
-//                if(wPressed && p2Velocity < maxSpeed) {
-//                    p2Velocity += velocityStep;
-//                }
-//                else if((sPressed) && p2Velocity > -maxSpeed) {
-//                    p2Velocity -= velocityStep;
-//                }else {
-//                    if(p2Velocity != 0) {
-//                        if(p2Velocity > 0) {
-//                            p2Velocity -=velocityStep * 2;
-//                        } else {
-//                            p2Velocity +=velocityStep;
-//                        }
-//                    }
-//                }
-//                if(dPressed) {
-//                    p2.rotate(-rotateStep);
-//                }
-//                else if(aPressed) {
-//                    p2.rotate(rotateStep);
-//                }
+                if(animationFinished) {
+                    //Player One
+                    if (sPressed) {
+                        currentAnimation = "Crouch";
+                        newAnimation = true;
+                        crouching = true;
+                        p1Velocity = 0;
+                    } else if (wPressed) {
+                        currentAnimation = "Jump";
+                        newAnimation = true;
+                        jumping = true;
+                        p1Velocity = 0;
+
+                    } else if (dPressed) {
+                        if ((!currentAnimation.equals("Crouch") && !currentAnimation.equals("Jump"))) {
+                            p1Velocity = 8;
+                        }
+                        newAnimation = true;
+                        currentAnimation = "Walk";
+                    } else if (aPressed) {
+                        if ((!currentAnimation.equals("Crouch") && !currentAnimation.equals("Jump"))) {
+                            p1Velocity = -8;
+                        }
+                        newAnimation = true;
+                        currentAnimation = "Walk";
+                    } else {
+                        p1Velocity = 0;
+                        currentAnimation = "Idle";
+                    }
+                }
 
                 try {
-                    Thread.sleep(250);
+                    Thread.sleep(10);
                 } catch (InterruptedException e) {
                     System.out.println("Exception caught for PlayerMover");
                 }
 
-                p1.move(-p1Velocity * Math.cos(p1.getAngle() - pi / 2.0), p1Velocity * Math.sin(p1.getAngle() - pi / 2.0));
+                if(crouching) {
+                    p1.moveTo(p1.getX(), crouchHeight);
+                } else {
+                    p1.moveTo(p1.getX(), standingHeight);
+                }
+
+                p1.move(p1Velocity, p1Yvelocity);
+
+
+                //p1.move(-p1Velocity * Math.cos(p1.getAngle() - pi / 2.0), p1Velocity * Math.sin(p1.getAngle() - pi / 2.0));
 //                p2.move(-p2Velocity * Math.cos(p2.getAngle() - pi / 2.0), p2Velocity * Math.sin(p2.getAngle() - pi / 2.0));
 
             }
