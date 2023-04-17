@@ -150,27 +150,29 @@ public class StreetFighter {
             //default images for the game
             gameCover = ImageIO.read(new File("src/images/street fighter logo.png"));
             background = ImageIO.read(new File("src/images/SF2bg1.jpg"));
-            player.add(ImageIO.read(new File("src/images/idleOne.png")));
-            player.add(ImageIO.read(new File("src/images/idleTwo.png")));
-            player.add(ImageIO.read(new File("src/images/idleThree.png")));
-            player.add(ImageIO.read(new File("src/images/idleFour.png")));
-            player.add(ImageIO.read(new File("src/images/walkOne.png")));
-            player.add(ImageIO.read(new File("src/images/walkTwo.png")));
-            player.add(ImageIO.read(new File("src/images/walkThree.png")));
-            player.add(ImageIO.read(new File("src/images/walkFour.png")));
-            player.add(ImageIO.read(new File("src/images/walkFive.png")));
-            player.add(ImageIO.read(new File("src/images/jumpOne.png")));
-            player.add(ImageIO.read(new File("src/images/jumpTwo.png")));
-            player.add(ImageIO.read(new File("src/images/jumpThree.png")));
-            player.add(ImageIO.read(new File("src/images/jumpFour.png")));
-            player.add(ImageIO.read(new File("src/images/jumpFive.png")));
-            player.add(ImageIO.read(new File("src/images/jumpSix.png")));
-            player.add(ImageIO.read(new File("src/images/jumpSeven.png")));
-            player.add(ImageIO.read(new File("src/images/crouch.png")));
-            player.add(ImageIO.read(new File("src/images/crouch.png")));
-            player.add(ImageIO.read(new File("src/images/crouch.png")));
 
+            //Player 1
+            player.add(ImageIO.read(new File("src/images/ryuidleOne.png")));
+            player.add(ImageIO.read(new File("src/images/ryuidleTwo.png")));
+            player.add(ImageIO.read(new File("src/images/ryuidleThree.png")));
+            player.add(ImageIO.read(new File("src/images/ryuidleFour.png")));
+            player.add(ImageIO.read(new File("src/images/ryuwalkOne.png")));
+            player.add(ImageIO.read(new File("src/images/ryuwalkTwo.png")));
+            player.add(ImageIO.read(new File("src/images/ryuwalkThree.png")));
+            player.add(ImageIO.read(new File("src/images/ryuwalkFour.png")));
+            player.add(ImageIO.read(new File("src/images/ryuwalkFive.png")));
+            player.add(ImageIO.read(new File("src/images/ryujumpOne.png")));
+            player.add(ImageIO.read(new File("src/images/ryujumpTwo.png")));
+            player.add(ImageIO.read(new File("src/images/ryujumpThree.png")));
+            player.add(ImageIO.read(new File("src/images/ryujumpFour.png")));
+            player.add(ImageIO.read(new File("src/images/ryujumpFive.png")));
+            player.add(ImageIO.read(new File("src/images/ryujumpSix.png")));
+            player.add(ImageIO.read(new File("src/images/ryujumpSeven.png")));
+            player.add(ImageIO.read(new File("src/images/ryucrouch.png")));
+            player.add(ImageIO.read(new File("src/images/ryucrouch.png")));
+            player.add(ImageIO.read(new File("src/images/ryucrouch.png")));
 
+            //Player 2
             player2 = ImageIO.read(new File("src/images/RYUcharactersheet.gif"));
 
 
