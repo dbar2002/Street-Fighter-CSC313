@@ -1,10 +1,8 @@
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
@@ -12,7 +10,6 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -37,8 +34,8 @@ import javax.swing.KeyStroke;
 public class StreetFighter {
     private static Boolean endgame;
     private static BufferedImage background;
-    private static Vector<BufferedImage> player = new Vector<>();
-    private static BufferedImage player2;
+    private static Vector<BufferedImage> player1 = new Vector<>();
+    private static Vector<BufferedImage> player2 = new Vector<>();
     private static BufferedImage gameCover;
     private static Boolean upPressed;
     private static Boolean downPressed;
@@ -152,35 +149,54 @@ public class StreetFighter {
             background = ImageIO.read(new File("src/images/SF2bg1.jpg"));
 
             //Player 1
-            player.add(ImageIO.read(new File("src/images/ryuidleOne.png")));
-            player.add(ImageIO.read(new File("src/images/ryuidleTwo.png")));
-            player.add(ImageIO.read(new File("src/images/ryuidleThree.png")));
-            player.add(ImageIO.read(new File("src/images/ryuidleFour.png")));
-            player.add(ImageIO.read(new File("src/images/ryuwalkOne.png")));
-            player.add(ImageIO.read(new File("src/images/ryuwalkTwo.png")));
-            player.add(ImageIO.read(new File("src/images/ryuwalkThree.png")));
-            player.add(ImageIO.read(new File("src/images/ryuwalkFour.png")));
-            player.add(ImageIO.read(new File("src/images/ryuwalkFive.png")));
-            player.add(ImageIO.read(new File("src/images/ryujumpOne.png")));
-            player.add(ImageIO.read(new File("src/images/ryujumpTwo.png")));
-            player.add(ImageIO.read(new File("src/images/ryujumpThree.png")));
-            player.add(ImageIO.read(new File("src/images/ryujumpFour.png")));
-            player.add(ImageIO.read(new File("src/images/ryujumpFive.png")));
-            player.add(ImageIO.read(new File("src/images/ryujumpSix.png")));
-            player.add(ImageIO.read(new File("src/images/ryujumpSeven.png")));
-            player.add(ImageIO.read(new File("src/images/ryucrouch.png")));
-            player.add(ImageIO.read(new File("src/images/ryucrouch.png")));
-            player.add(ImageIO.read(new File("src/images/ryucrouch.png")));
+            player1.add(ImageIO.read(new File("src/images/ryuidleOne.png")));
+            player1.add(ImageIO.read(new File("src/images/ryuidleTwo.png")));
+            player1.add(ImageIO.read(new File("src/images/ryuidleThree.png")));
+            player1.add(ImageIO.read(new File("src/images/ryuidleFour.png")));
+            player1.add(ImageIO.read(new File("src/images/ryuwalkOne.png")));
+            player1.add(ImageIO.read(new File("src/images/ryuwalkTwo.png")));
+            player1.add(ImageIO.read(new File("src/images/ryuwalkThree.png")));
+            player1.add(ImageIO.read(new File("src/images/ryuwalkFour.png")));
+            player1.add(ImageIO.read(new File("src/images/ryuwalkFive.png")));
+            player1.add(ImageIO.read(new File("src/images/ryujumpOne.png")));
+            player1.add(ImageIO.read(new File("src/images/ryujumpTwo.png")));
+            player1.add(ImageIO.read(new File("src/images/ryujumpThree.png")));
+            player1.add(ImageIO.read(new File("src/images/ryujumpFour.png")));
+            player1.add(ImageIO.read(new File("src/images/ryujumpFive.png")));
+            player1.add(ImageIO.read(new File("src/images/ryujumpSix.png")));
+            player1.add(ImageIO.read(new File("src/images/ryujumpSeven.png")));
+            player1.add(ImageIO.read(new File("src/images/ryucrouch.png")));
+            player1.add(ImageIO.read(new File("src/images/ryucrouch.png")));
+            player1.add(ImageIO.read(new File("src/images/ryucrouch.png")));
 
             //Player 2
-            player2 = ImageIO.read(new File("src/images/RYUcharactersheet.gif"));
+            player2.add(ImageIO.read(new File("src/images/ryuidleOne.png")));
+            player2.add(ImageIO.read(new File("src/images/ryuidleTwo.png")));
+            player2.add(ImageIO.read(new File("src/images/ryuidleThree.png")));
+            player2.add(ImageIO.read(new File("src/images/ryuidleFour.png")));
+            player2.add(ImageIO.read(new File("src/images/ryuwalkOne.png")));
+            player2.add(ImageIO.read(new File("src/images/ryuwalkTwo.png")));
+            player2.add(ImageIO.read(new File("src/images/ryuwalkThree.png")));
+            player2.add(ImageIO.read(new File("src/images/ryuwalkFour.png")));
+            player2.add(ImageIO.read(new File("src/images/ryuwalkFive.png")));
+            player2.add(ImageIO.read(new File("src/images/ryujumpOne.png")));
+            player2.add(ImageIO.read(new File("src/images/ryujumpTwo.png")));
+            player2.add(ImageIO.read(new File("src/images/ryujumpThree.png")));
+            player2.add(ImageIO.read(new File("src/images/ryujumpFour.png")));
+            player2.add(ImageIO.read(new File("src/images/ryujumpFive.png")));
+            player2.add(ImageIO.read(new File("src/images/ryujumpSix.png")));
+            player2.add(ImageIO.read(new File("src/images/ryujumpSeven.png")));
+            player2.add(ImageIO.read(new File("src/images/ryucrouch.png")));
+            player2.add(ImageIO.read(new File("src/images/ryucrouch.png")));
+            player2.add(ImageIO.read(new File("src/images/ryucrouch.png")));
+
 
 
         } catch (IOException ioe) {
 
         }
-
-        System.out.println(player.size());
+        System.out.println(player1.size());
+        System.out.println(player2.size());
 
     }
 
@@ -510,8 +526,8 @@ public class StreetFighter {
                 }
 
 
+                //Player One
                 if(animationFinished) {
-                    //Player One
                     if (sPressed) {
                         currentAnimation = "Crouch";
                         newAnimation = true;
@@ -554,6 +570,53 @@ public class StreetFighter {
                 }
 
                 p1.move(p1Velocity, p1Yvelocity);
+
+
+                //Player Two
+                if(animationFinished) {
+                    if (downPressed) {
+                        currentAnimation = "Crouch";
+                        newAnimation = true;
+                        crouching = true;
+                        p2Velocity = 0;
+                    } else if (upPressed) {
+                        currentAnimation = "Jump";
+                        newAnimation = true;
+                        jumping = true;
+                        p2Velocity = 0;
+
+                    } else if (rightPressed) {
+                        if ((!currentAnimation.equals("Crouch") && !currentAnimation.equals("Jump"))) {
+                            p2Velocity = 8;
+                        }
+                        newAnimation = true;
+                        currentAnimation = "Walk";
+                    } else if (leftPressed) {
+                        if ((!currentAnimation.equals("Crouch") && !currentAnimation.equals("Jump"))) {
+                            p2Velocity = -8;
+                        }
+                        newAnimation = true;
+                        currentAnimation = "Walk";
+                    } else {
+                        p2Velocity = 0;
+                        currentAnimation = "Idle";
+                    }
+                }
+
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    System.out.println("Exception caught for PlayerMover");
+                }
+
+                if(crouching) {
+                    p2.moveTo(p2.getX(), crouchHeight);
+                } else {
+                    p2.moveTo(p2.getX(), standingHeight);
+                }
+
+                p2.move(p2Velocity, p2Yvelocity);
+
 
 
                 //p1.move(-p1Velocity * Math.cos(p1.getAngle() - pi / 2.0), p1Velocity * Math.sin(p1.getAngle() - pi / 2.0));
@@ -657,8 +720,8 @@ public class StreetFighter {
         Graphics g = appFrame.getGraphics();
         Graphics2D g2d = (Graphics2D) g;
 
-        g2d.drawImage((player.get(PlayerMover.getAnimState())), (int) (p1.getX()), (int) (p1.getY()), null);
-        //g2d.drawImage(rotateImageObject(p2).filter(player2, null), (int) (p2.getX() + 0.5), (int) (p2.getY() + 0.5), null);
+        g2d.drawImage((player1.get(PlayerMover.getAnimState())), (int) (p1.getX()), (int) (p1.getY()), null);
+        g2d.drawImage((player2.get(PlayerMover.getAnimState())), (int) (p2.getX()), (int) (p2.getY()), null);
     }
     private static void drawBarriers() {
         //import graphics
