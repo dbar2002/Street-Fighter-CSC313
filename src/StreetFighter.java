@@ -98,12 +98,17 @@ public class StreetFighter {
     private static Image image;
     private static Vector<String> moveSet;
     private static Vector<Integer> moveSteps;
+    private Timer mGameTimer;
+    private int mTimeLeft = 20;
+    private final int mDelay = 1000; // Start after 1 second
+    private final int mPeriod = 1000; // Ticks every 1 second
 
     public StreetFighter() {
         setup();
     }
 
     public static void setup() {
+
         appFrame = new JFrame("Street Fighter");
         xOffset = 0;
         yOffset = 0;
@@ -293,6 +298,7 @@ public class StreetFighter {
 
     public static class MyBackground extends JPanel {
 
+
         public MyBackground() {
             setBackground(new Color(0, true));
         }
@@ -311,13 +317,18 @@ public class StreetFighter {
 
         Graphics g = appFrame.getGraphics();
         Graphics2D g2d = (Graphics2D) g;
+        private String mTimeLeft;
+        private Timer mGameTimer;
+        private final int mDelay = 1000; // Start after 1 second
+        private final int mPeriod = 1000; // Ticks every 1 second
 
         public void run() {
             while (!endgame) {
                 drawBackground();
                 drawPlayer();
-                CountdownTimer timer = new CountdownTimer(99);
-                timer.start();
+                g.drawString("Time:" + mTimeLeft, 500, 100);
+                g2d.setFont(new Font("TimesRoman", Font.BOLD, 40));
+
 
                 if (p1CurrentLap >= maxLaps + 1) {
                     drawWinner("Player 1");
@@ -345,6 +356,22 @@ public class StreetFighter {
 
             }
         }
+    }
+    private void SetupTimer() {
+        mGameTimer = new Timer();
+        mGameTimer.scheduleAtFixedRate(new TimerTask() {
+
+            public void run() {
+
+                if (mTimeLeft == 1) {
+                    mTimeLeft--;
+                    mGameTimer.cancel();
+                    // Handle your game over thing
+                } else {
+                    mTimeLeft--;
+                }
+            }
+        }, mDelay, mPeriod);
     }
 
     private static void drawWinner(String winningPlayer) {
@@ -1286,4 +1313,5 @@ public class StreetFighter {
 
 
     }
+
 }
