@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
@@ -280,7 +281,8 @@ public class StreetFighter {
             while (!endgame) {
                 drawBackground();
                 drawPlayer();
-                //drawCountdown(long durationSeconds);
+                CountdownTimer timer = new CountdownTimer(99);
+                timer.start();
 
                 if (p1CurrentLap >= maxLaps + 1) {
                     drawWinner("Player 1");
@@ -623,29 +625,27 @@ public class StreetFighter {
         myPanel.getInputMap(IFW).put(KeyStroke.getKeyStroke("released " + input), input + " released");
         myPanel.getActionMap().put(input + " released", new KeyReleased(input));
     }
-    private static void drawCountdown(long durationSeconds) {
-        Graphics g = appFrame.getGraphics();
-        Graphics2D g2d = (Graphics2D) g;
-        DecimalFormat df = new DecimalFormat("##");
-        long remaining = start + (durationSeconds * 1000) - System.currentTimeMillis();
-        float sec = remaining / 1000f;
-        Stroke oldStroke = g2d.getStroke();
+    public static class CountdownTimer {
+        private int secondsLeft;
+        private Timer timer;
 
-        g2d.setColor(Color.ORANGE);
-        g2d.fillRect(appFrame.getWidth() - 140, 30, 125, 55);
-        g2d.setColor(Color.BLACK);
-        g2d.setStroke(new BasicStroke(5));
-        g2d.drawRect(appFrame.getWidth() - 140, 30, 125, 55);
-        g2d.setStroke(oldStroke);
-        g2d.setFont(new Font("ARIAL", Font.BOLD, 12));
-        g2d.drawString(df.format(sec) + " seconds", appFrame.getWidth() - 130, 45);
-        g2d.drawString("Player 1 Laps: " + p1CurrentLap + "/" + maxLaps, appFrame.getWidth() - 130, 65);
-        g2d.drawString("Player 2 Laps: " + p2CurrentLap + "/" + maxLaps, appFrame.getWidth() - 130, 80);
+        public CountdownTimer(int seconds) {
+            this.secondsLeft = seconds;
+        }
 
-        if (remaining <= 0) {
-            // Timer has expired
-            // Do something here, like end the game or show a message
-            return;
+        public void start() {
+            timer = new Timer();
+            timer.scheduleAtFixedRate(new TimerTask() {
+                public void run() {
+                    if (secondsLeft == 0) {
+                        System.out.println("Time's up!");
+                        timer.cancel();
+                    } else {
+                        System.out.println(secondsLeft + " seconds left");
+                        secondsLeft--;
+                    }
+                }
+            }, 0, 1000);
         }
     }
 
