@@ -317,7 +317,7 @@ public class StreetFighter {
 
         Graphics g = appFrame.getGraphics();
         Graphics2D g2d = (Graphics2D) g;
-        private String mTimeLeft = "60"; // Initialize mTimeLeft with 60 seconds
+        private int mTimeLeft = 99; // Initialize mTimeLeft with 90 seconds
         private Timer mGameTimer;
         private final int mDelay = 1000; // Start after 1 second
         private final int mPeriod = 1000; // Ticks every 1 second
