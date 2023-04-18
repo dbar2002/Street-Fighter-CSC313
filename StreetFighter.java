@@ -98,8 +98,8 @@ public class StreetFighter {
     private static Image image;
     private static Vector<String> moveSet;
     private static Vector<Integer> moveSteps;
+    private String mTimeLeft = "180";
     private Timer mGameTimer;
-    private int mTimeLeft = 20;
     private final int mDelay = 1000; // Start after 1 second
     private final int mPeriod = 1000; // Ticks every 1 second
 
@@ -317,7 +317,7 @@ public class StreetFighter {
 
         Graphics g = appFrame.getGraphics();
         Graphics2D g2d = (Graphics2D) g;
-        private String mTimeLeft;
+        private String mTimeLeft = "60"; // Initialize mTimeLeft with 60 seconds
         private Timer mGameTimer;
         private final int mDelay = 1000; // Start after 1 second
         private final int mPeriod = 1000; // Ticks every 1 second
@@ -362,13 +362,12 @@ public class StreetFighter {
         mGameTimer.scheduleAtFixedRate(new TimerTask() {
 
             public void run() {
-
-                if (mTimeLeft == 1) {
-                    mTimeLeft--;
+                int timeLeft = Integer.parseInt(mTimeLeft); // Convert mTimeLeft to an integer
+                if (timeLeft == 1) {
                     mGameTimer.cancel();
-                    // Handle your game over thing
                 } else {
-                    mTimeLeft--;
+                    timeLeft--;
+                    mTimeLeft = String.valueOf(timeLeft); // Convert timeLeft back to a string and update mTimeLeft
                 }
             }
         }, mDelay, mPeriod);
