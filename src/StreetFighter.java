@@ -98,7 +98,7 @@ public class StreetFighter {
     private static Image image;
     private static Vector<String> moveSet;
     private static Vector<Integer> moveSteps;
-    private String mTimeLeft = "180";
+    private String mTimeLeft = "99";
     private Timer mGameTimer;
     private final int mDelay = 1000; // Start after 1 second
     private final int mPeriod = 1000; // Ticks every 1 second
@@ -317,7 +317,7 @@ public class StreetFighter {
 
         Graphics g = appFrame.getGraphics();
         Graphics2D g2d = (Graphics2D) g;
-        private int mTimeLeft = 99; // Initialize mTimeLeft with 90 seconds
+        private String mTimeLeft = "99"; // Initialize mTimeLeft with 99 seconds
         private Timer mGameTimer;
         private final int mDelay = 1000; // Start after 1 second
         private final int mPeriod = 1000; // Ticks every 1 second
