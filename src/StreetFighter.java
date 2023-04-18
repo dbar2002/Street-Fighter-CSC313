@@ -450,7 +450,7 @@ public class StreetFighter {
 
             try {
                 //play music
-                ais = AudioSystem.getAudioInputStream(new File("src/sounds/yt5s.io_-_NFS_CARBON_BELT_TUNER_THEMEPHONK_REMIX_320_kbps.mp3"));
+                ais = AudioSystem.getAudioInputStream(new File("src/sounds/Street-Fighter-II-Arcade-Music-Ryu-Stage-CPS1.wav"));
                 wav1 = AudioSystem.getClip();
                 wav1.open(ais);
                 wav1.loop(Clip.LOOP_CONTINUOUSLY);
